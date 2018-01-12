@@ -8,6 +8,31 @@ Object.defineProperty(exports, "__esModule", {
 	value: true
 });
 exports.findDoctor = findDoctor;
+
+$(function () {
+	$('#filters').submit(function (event) {
+		event.preventDefault();
+		var filters = {};
+		$('*[name=filter]').each(function () {
+			//put each filter pair into the filters object if its filled out
+			var key = $(this).attr('id');
+			var value = $(this).val();
+			console.log(key);
+			console.log(value);
+			if (value) {
+				filters[key] = value;
+			}
+		}); //end loop
+		if (filters) {
+			findDoctor(filters, render);
+		} else {
+			alert("ya ain't can't search for nothin'!");
+		}
+	}); //end submit
+
+	function render(results) {}
+});
+
 function findDoctor(filters) {
 	//filters is an object of various filter objects
 	var apiKey = require('./../.env').apiKey;
@@ -15,11 +40,12 @@ function findDoctor(filters) {
 	for (var key in filters) {
 		//loop through filter object and concat its key-value into the filter array
 		if (filters.hasOwnProperty(key)) {
-			filterArr.push(filters[key].name + "=" + filters[key].value);
+			filterArr.push(key + "=" + filters[key]);
 		}
 	}
-	var queryString = filterArr.join('&'); //create query string from filter array
+	var queryString = filterArr.join('&'); //create query string from filter array separated by '&'
 	var xhr = $.get('https://api.betterdoctor.com/2016-03-01/doctors?location=45.523%2C-122.676%2C100&' + queryString + '&skip=0&limit=10&user_key=' + apiKey);
+
 	xhr.done(function (results) {
 		console.log(results);
 	});
