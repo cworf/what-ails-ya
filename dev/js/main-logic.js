@@ -1,5 +1,5 @@
 export function findDoctor(filters, render){ //filters is an object of various filter objects
-	const apiKey = require('./../.env').apiKey;
+	const apiKey = require('./../../.env').apiKey;
 	const filterArr = [];
 	for (var key in filters) { //loop through filter object and concat its key-value into the filter array
 		if (filters.hasOwnProperty(key)) {

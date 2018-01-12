@@ -1,89 +1,134 @@
-const gulp = require('gulp'),
-	del = require('del'),
-	lib = require('bower-files') ({
-		  "overrides":{
-		    "bootstrap" : {
-		      "main": [
-		        "less/bootstrap.less",
-		        "dist/css/bootstrap.css",
-		        "dist/js/bootstrap.js"
-		      ]
-		    }
-		  }
-	  }),
-	uglify = require('gulp-uglify'),
-	concat = require('gulp-concat'),
-	babelify = require('babelify')
-	browserify = require('browserify'),
-	source = require('vinyl-source-stream'),
-	browserSync = require('browser-sync').create();
+// NODE MODULE IMPORTS (& environment variable)
+var gulp = require('gulp');
+var browserify = require('browserify');
+var babelify = require('babelify');
+var source = require('vinyl-source-stream');
+var concat = require('gulp-concat');
+var uglify = require('gulp-uglify');
+var utilities = require('gulp-util');
+var buildProduction = utilities.env.production;
+var del = require('del');
+var jshint = require('gulp-jshint');
+var browserSync = require('browser-sync').create();
+var lib = require('bower-files') ({
+ "overrides" : {
+   "bootstrap" : {
+     "main": [
+       "less/bootstrap.less",
+       "dist/css/bootstrap.css",
+       "dist/js/bootstrap.js"
+     ]
+   }
+ }
+});
+var sass = require('gulp-sass');
+var sourcemaps = require('gulp-sourcemaps');
 
 
+//GULP TASKS
 
+//take concatenated JS file from tmp/, transpile from ES6, browserify
+  //and place in build/js/ directory
+gulp.task('jsBrowserify', ['concatInterface'], function() {
+  return browserify({ entries: ['./tmp/allConcat.js']})
+    .transform(babelify.configure({
+      presets: ["es2015"]
+    }))
+    .bundle()
+    .pipe(source('app.js'))
+    .pipe(gulp.dest('./build/js'))
+});
+
+//'$ gulp concatInterface' - gather all interface files from js/,
+  //concatenate them and place in tmp/ directory
+gulp.task('concatInterface', function(){
+  return gulp.src(['dev/js/*-interface.js'])
+    .pipe(concat('allConcat.js'))
+    .pipe(gulp.dest('./tmp'));
+});
+
+//'$ gulp minifyScripts'
+gulp.task('minifyScripts', ['jsBrowserify'], function(){
+  return gulp.src('build/js/app.js')
+    .pipe(uglify())
+    .pipe(gulp.des('./build/js'));
+});
+
+//'$ gulp clean'
 gulp.task('clean', function(){
-	del(['tmp', 'dist']);
+  return del(['build', 'tmp']);
 });
 
-gulp.task('copyHTML', function(){
-	gulp.src('dev/index.html')
-		.pipe(gulp.dest('./dist'));
-});
-gulp.task('copyCSS', ['copyHTML'], function(){
-	gulp.src('dev/css/master.css')
-		.pipe(gulp.dest('./dist/css'));
+//'$ gulp jshint'
+gulp.task('jshint', function(){
+  return gulp.src(['dev/js/*.js'])
+    .pipe(jshint())
+    .pipe(jshint.reporter('default'));
 });
 
-gulp.task('bowerCSS', ['copyCSS'], function () {
-	gulp.src(lib.ext('css').files) //grab css
-		.pipe(concat('vendor.css'))
-		.pipe(gulp.dest('./dist/css'));
+gulp.task('bower', ['bowerJS', 'cssConcat']);
+
+gulp.task('bowerJS', function() {
+ return gulp.src(lib.ext('js').files)
+   .pipe(concat('vendor.min.js'))
+   .pipe(uglify())
+   .pipe(gulp.dest('./build/js'));
 });
 
-gulp.task('bowerJS', ['bowerCSS'], function(){
-	gulp.src(lib.ext('js').files) //grab js
-	.pipe(concat('vendor.min.js'))
-	.pipe(uglify())
-	.pipe(gulp.dest('./dist/js'));
+gulp.task('bowerCSS', function(){
+ return gulp.src(lib.ext('css').files)
+   .pipe(concat('vendor.css'))
+   .pipe(gulp.dest('./build/css'));
+});
+
+gulp.task('cssConcat', ['bowerCSS', 'cssBuild'], function() {
+ return gulp.src(['./build/css/vendor.css', './build/css/main.css'])
+   .pipe(concat('build.css'))
+   .pipe(gulp.dest('./build/css'))
+   .pipe(browserSync.stream());
+});
+
+gulp.task('cssBuild', function() {
+ return gulp.src('./dev/scss/master.scss')
+   .pipe(sourcemaps.init())
+   .pipe(sass().on('error', sass.logError))
+   .pipe(sourcemaps.write())
+   .pipe(gulp.dest('./build/css'))
+});
+
+gulp.task('build', ['clean'], function(){
+ if (buildProduction) {
+   gulp.start('minifyScripts');
+ } else {
+   gulp.start('jsBrowserify');
+ }
+ gulp.start('bower');
 });
 
 
-//optomize output for all browsers (concat, browserify, babelify, then minify)
+gulp.task('serve', ['build'], function() {
+ browserSync.init({
+   server: {
+     baseDir: "./",
+     index: "index.html"
+   }
+ });
 
-gulp.task('concat', ['bowerJS'], function(){
-	gulp.src(['dev/js/interface.js', 'dev/js/logic.js'])
-		.pipe(concat('concat.js'))
-		.pipe(gulp.dest('./tmp'));
+ gulp.watch(['dev/js/*.js'], ['jsBuild']);
+ gulp.watch(['bower.json'], ['bowerBuild']);
+ gulp.watch(['*.html'], ['htmlBuild']);
+ gulp.watch(['dev/scss/*.scss', 'scss/**/*.scss'], ['cssConcat']);
+
 });
 
-gulp.task('jsBrowserify', ['concat'], function() {
-	browserify({ entries: ['./tmp/concat.js']})
-		.transform(babelify.configure({
-			presets: ["es2015"]
-		}))
-		.bundle()
-		.pipe(source('app.js'))
-		.pipe(gulp.dest('./dist/js'))
+gulp.task('jsBuild', ['jsBrowserify', 'jshint'], function(){
+ browserSync.reload();
 });
 
-gulp.task('minify', ['jsBrowserify'], function() {
-        return gulp.src('/js/app.js')
-          .pipe(uglify())
-          .pipe(gulp.dest('./build/js'));
+gulp.task('bowerBuild', ['bower'], function(){
+ browserSync.reload();
 });
 
-gulp.task('default', function(){
-	gulp.start('minify');
-	browserSync.reload();
-})
-
-gulp.task('serve', function() {
-    browserSync.init({
-    	server: {
-        	baseDir: "./dist",
-            index: "index.html"
-        }
-	});
-
-    gulp.watch(['dev/*/*.*', 'dev/index.html'], ['default']);
-
+gulp.task('htmlBuild', function(){
+ browserSync.reload();
 });

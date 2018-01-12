@@ -1,3 +1,4 @@
+import { findDoctor } from '../dev/js/main-logic.js';
 
 $(function(){
 	$('#filters').submit(function(event){
