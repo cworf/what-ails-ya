@@ -13,6 +13,7 @@ $(function () {
 	$('#filters').submit(function (event) {
 		event.preventDefault();
 		var filters = {};
+		$('#results').text("");
 		$('*[name=filter]').each(function () {
 			//put each filter pair into the filters object if its filled out
 			var key = $(this).attr('id');
@@ -43,16 +44,20 @@ function template(doctor) {
 	var address2 = '';
 	var phoneStr = "";
 	var accepting = 'Currently ';
+	var title = void 0;
 
 	if (doctor.practices[0].visit_address.street2) {
 		address2 = doctor.practices[0].visit_address.street2 + '<br>';
 	};
 	doctor.practices[0].phones.forEach(function (phone) {
-		phoneStr += '<div><span class="sub-meta-title">' + phone.type + ':</span> ' + phone.number + '</div>';
+		var formattedNum = phone.number.substr(0, 3) + '-' + phone.number.substr(3, 3) + '-' + phone.number.substr(6, 4);
+		console.log(formattedNum);
+		phoneStr += '<div><span class="sub-meta-title">' + phone.type + ':</span> ' + formattedNum + '</div>';
 	});
 	if (!doctor.practices[0].accepts_new_patients) {
 		accepting = 'Not currently ';
 	}
+	// if ()
 
 	return '<div class="doctor">\n\t\t<div class="picture">\n\t\t\t<img src="' + doctor.profile.image_url + '" alt="">\n\t\t</div>\n\t\t<h3>' + doctor.profile.first_name + ' ' + doctor.profile.last_name + '</h3>\n\t\t<div class="meta-box">\n\t\t\t<div class="meta">\n\t\t\t\t<span class="meta-title">Address:</span>\n\t\t\t\t<div>\n\t\t\t\t\t' + doctor.practices[0].visit_address.street + '<br>' + address2 + '\n\t\t\t\t\t' + doctor.practices[0].visit_address.city + ', ' + doctor.practices[0].visit_address.state + '<br>\n\t\t\t\t\t' + doctor.practices[0].visit_address.zip + '\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t\t<div class="meta">\n\t\t\t\t<span class="meta-title">Phones:</span> ' + phoneStr + '\n\t\t\t</div>\n\t\t\t<div class="meta">\n\t\t\t\t<span class="meta-title">Website:</span> <a href="#">n/a</a>\n\t\t\t</div>\n\t\t\t<div class="meta">\n\t\t\t\t<span class="meta-title">' + accepting + 'accepting patients</span>\n\t\t\t</div>\n\t\t</div>\n\t</div>';
 }

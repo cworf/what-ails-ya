@@ -3,6 +3,7 @@ $(function(){
 	$('#filters').submit(function(event){
 		event.preventDefault();
 		const filters = {};
+		$('#results').text("");
 		$('*[name=filter]').each(function(){ //put each filter pair into the filters object if its filled out
 			let key = $(this).attr('id');
 			let value = $(this).val();
@@ -32,16 +33,20 @@ function template(doctor){
 	let address2 = '';
 	let phoneStr = "";
 	let accepting = `Currently `;
+	let title;
 
 	if (doctor.practices[0].visit_address.street2) {
 		address2 = doctor.practices[0].visit_address.street2 + '<br>';
 	};
 	doctor.practices[0].phones.forEach(function(phone){
-		phoneStr += `<div><span class="sub-meta-title">${phone.type}:</span> ${phone.number}</div>`
+		let formattedNum = `${phone.number.substr(0, 3)}-${phone.number.substr(3, 3)}-${phone.number.substr(6, 4)}`
+		console.log(formattedNum);
+		phoneStr += `<div><span class="sub-meta-title">${phone.type}:</span> ${formattedNum}</div>`
 	});
 	if (!doctor.practices[0].accepts_new_patients) {
 		accepting = `Not currently `
 	}
+	// if ()
 
 	return `<div class="doctor">
 		<div class="picture">
