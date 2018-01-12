@@ -1,0 +1,22 @@
+{
+  "name": "solar-age",
+  "description": "converts the age of a person on earth to what their age would be on other planets.",
+  "main": "index.js",
+  "authors": [
+    "Colin Worf"
+  ],
+  "license": "ISC",
+  "homepage": "",
+  "ignore": [
+    "**/.*",
+    "node_modules",
+    "bower_components",
+    "test",
+    "tests"
+  ],
+  "dependencies": {
+    "jquery": "^3.2.1",
+    "bootstrap": "^3.3.7",
+    "jquery-ui": "^1.12.1"
+  }
+}
