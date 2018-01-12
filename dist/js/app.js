@@ -17,8 +17,6 @@ $(function () {
 			//put each filter pair into the filters object if its filled out
 			var key = $(this).attr('id');
 			var value = $(this).val();
-			console.log(key);
-			console.log(value);
 			if (value) {
 				filters[key] = value;
 			}
@@ -30,10 +28,36 @@ $(function () {
 		}
 	}); //end submit
 
-	function render(results) {}
+	function render(results) {
+		if (results.meta.count != 0) {
+
+			$('#count').text(results.meta.total);
+			results.data.forEach(function (doctor) {
+				$('#results').append(template(doctor));
+			}); //end loop
+		}
+	}
 });
 
-function findDoctor(filters) {
+function template(doctor) {
+	var address2 = '';
+	var phoneStr = "";
+	var accepting = 'Currently ';
+
+	if (doctor.practices[0].visit_address.street2) {
+		address2 = doctor.practices[0].visit_address.street2 + '<br>';
+	};
+	doctor.practices[0].phones.forEach(function (phone) {
+		phoneStr += '<div><span class="sub-meta-title">' + phone.type + ':</span> ' + phone.number + '</div>';
+	});
+	if (!doctor.practices[0].accepts_new_patients) {
+		accepting = 'Not currently ';
+	}
+
+	return '<div class="doctor">\n\t\t<div class="picture">\n\t\t\t<img src="' + doctor.profile.image_url + '" alt="">\n\t\t</div>\n\t\t<h3>' + doctor.profile.first_name + ' ' + doctor.profile.last_name + '</h3>\n\t\t<div class="meta-box">\n\t\t\t<div class="meta">\n\t\t\t\t<span class="meta-title">Address:</span>\n\t\t\t\t<div>\n\t\t\t\t\t' + doctor.practices[0].visit_address.street + '<br>' + address2 + '\n\t\t\t\t\t' + doctor.practices[0].visit_address.city + ', ' + doctor.practices[0].visit_address.state + '<br>\n\t\t\t\t\t' + doctor.practices[0].visit_address.zip + '\n\t\t\t\t</div>\n\t\t\t</div>\n\t\t\t<div class="meta">\n\t\t\t\t<span class="meta-title">Phones:</span> ' + phoneStr + '\n\t\t\t</div>\n\t\t\t<div class="meta">\n\t\t\t\t<span class="meta-title">Website:</span> <a href="#">n/a</a>\n\t\t\t</div>\n\t\t\t<div class="meta">\n\t\t\t\t<span class="meta-title">' + accepting + 'accepting patients</span>\n\t\t\t</div>\n\t\t</div>\n\t</div>';
+}
+
+function findDoctor(filters, render) {
 	//filters is an object of various filter objects
 	var apiKey = require('./../.env').apiKey;
 	var filterArr = [];
@@ -47,7 +71,8 @@ function findDoctor(filters) {
 	var xhr = $.get('https://api.betterdoctor.com/2016-03-01/doctors?location=45.523%2C-122.676%2C100&' + queryString + '&skip=0&limit=10&user_key=' + apiKey);
 
 	xhr.done(function (results) {
-		console.log(results);
+
+		render(results);
 	});
 }
 
