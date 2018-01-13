@@ -1,6 +1,8 @@
+import { initApi } from '../dev/js/init-logic.js';
 import { findDoctor } from '../dev/js/main-logic.js';
 
 $(function(){
+	initApi(renderForm);
 	$('#filters').submit(function(event){
 		event.preventDefault();
 		const filters = {};
@@ -12,23 +14,34 @@ $(function(){
 				filters[key] = value;
 			}
 		}); //end loop
-		if (filters) {
-			findDoctor(filters, render);
-		} else {
+		console.log(filters);
+		if ($.isEmptyObject(filters)) {
 			alert("ya ain't can't search for nothin'!")
+		} else {
+			findDoctor(filters, render);
 		}
 	}); //end submit
-
-	function render(results){
-		if (results.meta.count != 0) {
-
-			$('#count').text(results.meta.total);
-			results.data.forEach(function(doctor){
-				$('#results').append(template(doctor))
-			}); //end loop
-		}
-	}
 });
+
+function renderForm(results){
+	results.data.forEach(function(option){
+		let value = option.uid;
+		let display = option.name;
+		let category = option.category;
+		$("select optgroup[label=" + category + "]").append(`<option value="${value}">${display}</option>`);
+	});
+}
+
+function render(results){
+	if (results.meta.count != 0) {
+		$('#count').text(results.meta.total);
+		results.data.forEach(function(doctor){
+			$('#results').append(template(doctor))
+		}); //end loop
+	} else {
+		alert("hmm, you gotta use better search terms. This search came up empty...");
+	}
+}
 
 function template(doctor){
 	let address2 = '';

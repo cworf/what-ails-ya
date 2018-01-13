@@ -19,6 +19,17 @@
 				<label for="ailment">What ails ya?</label>
 				<input type="text" name="filter" id="query" placeholder="e.g. 'Toothache'">
 			</div>
+			<div class="form-group">
+				<label for="practice_uid">Search by practice</label>
+				<select name="filter" id="practice_uid">
+					<option value=""></option>
+					<optgroup label="medical"></optgroup>
+					<optgroup label="dental"></optgroup>
+					<optgroup label="services"></optgroup>
+					<optgroup label="therapy"></optgroup>
+					<optgroup label="vision"></optgroup>
+				</select>
+			</div>
 			<button type="submit" name="button">Find a wizard!</button>
 		</form>
 		<div id="results-meta">
