@@ -23,6 +23,7 @@ $(function(){
 	}); //end submit
 });
 
+//function renders grouped select box
 function renderForm(results){
 	results.data.forEach(function(option){
 		let value = option.uid;
@@ -32,6 +33,7 @@ function renderForm(results){
 	});
 }
 
+//function renders final results
 function render(results){
 	if (results.meta.count != 0) {
 		$('#count').text(results.meta.total);
@@ -60,8 +62,8 @@ function template(doctor){
 	if (!doctor.practices[0].accepts_new_patients) {
 		accepting = `Not currently `
 	}
-	// if ()
 
+	//this is the output template
 	return `<div class="doctor">
 		<div class="picture">
 			<img src="${doctor.profile.image_url}" alt="">
