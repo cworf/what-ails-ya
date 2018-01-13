@@ -50,17 +50,21 @@ function template(doctor){
 	let phoneStr = "";
 	let accepting = `Currently `;
 	let title;
+	let website = ``;
 
 	if (doctor.practices[0].visit_address.street2) {
 		address2 = doctor.practices[0].visit_address.street2 + '<br>';
 	};
 	doctor.practices[0].phones.forEach(function(phone){
-		let formattedNum = `${phone.number.substr(0, 3)}-${phone.number.substr(3, 3)}-${phone.number.substr(6, 4)}`
+		let formattedNum = `${phone.number.substr(0, 3)}-${phone.number.substr(3, 3)}-${phone.number.substr(6, 4)}` //format number into string
 		console.log(formattedNum);
 		phoneStr += `<div><span class="sub-meta-title">${phone.type}:</span> ${formattedNum}</div>`
 	});
 	if (!doctor.practices[0].accepts_new_patients) {
 		accepting = `Not currently `
+	}
+	if (doctor.practices[0].website) {
+		website = doctor.practices[0].website;
 	}
 
 	//this is the output template
@@ -82,7 +86,7 @@ function template(doctor){
 				<span class="meta-title">Phones:</span> ${phoneStr}
 			</div>
 			<div class="meta">
-				<span class="meta-title">Website:</span> <a href="#">n/a</a>
+				<span class="meta-title">Website:</span> <a href="${website}">${website}</a>
 			</div>
 			<div class="meta">
 				<span class="meta-title">${accepting}accepting patients</span>
