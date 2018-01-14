@@ -8,9 +8,12 @@ export function findDoctor(filters, render, address){ //filters is an object of 
 	}
 	const queryString = filterArr.join('&'); //create query string from filter array separated by '&'
 	console.log(queryString);
-	const xhr = $.get(`https://api.betterdoctor.com/2016-03-01/doctors?${queryString}&skip=0&limit=10&user_key=${apiKey}`);
-
-	xhr.done(function(results){
-		render(results, address)
+	$.get(`https://api.betterdoctor.com/2016-03-01/doctors?${queryString}&skip=0&limit=10&user_key=${apiKey}`)
+	.done(function(results){
+		render(results, address);
+	})
+	.fail(function(error){
+		console.log(error);
+		alert(error.responseJSON.meta.message)
 	});
 }
