@@ -1,4 +1,5 @@
 import { initApi } from '../dev/js/init-logic.js';
+import {locApi} from '../dev/js/location-logic.js';
 import { findDoctor } from '../dev/js/main-logic.js';
 
 $(function(){
@@ -6,6 +7,7 @@ $(function(){
 	$('#filters').submit(function(event){
 		event.preventDefault();
 		const filters = {};
+		const location = $('#address').val();
 		$('#results').text("");
 		$('*[name=filter]').each(function(){ //put each filter pair into the filters object if its filled out
 			let key = $(this).attr('id');
@@ -14,9 +16,11 @@ $(function(){
 				filters[key] = value;
 			}
 		}); //end loop
-		console.log(filters);
-		if ($.isEmptyObject(filters)) {
-			alert("ya ain't can't search for nothin'!")
+
+		if ($.isEmptyObject(filters) && !address) {
+			alert("ya ain't can't search for nothin'!");
+		} else if (location) {
+			locApi(location, filters, render, findDoctor);
 		} else {
 			findDoctor(filters, render);
 		}
