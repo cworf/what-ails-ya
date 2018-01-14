@@ -8,7 +8,9 @@ $(function(){
 		event.preventDefault();
 		const filters = {};
 		const location = $('#address').val();
-		$('#results').text("");
+		const distance = $('#distance').val();
+
+		$('#results').text("");//clear the board
 		$('*[name=filter]').each(function(){ //put each filter pair into the filters object if its filled out
 			let key = $(this).attr('id');
 			let value = $(this).val();
@@ -20,7 +22,11 @@ $(function(){
 		if ($.isEmptyObject(filters) && !address) {
 			alert("ya ain't can't search for nothin'!");
 		} else if (location) {
-			locApi(location, filters, render, findDoctor);
+			if (distance) {
+				locApi(location, distance, filters, render, findDoctor);
+			} else {
+				alert("I need to know where how far out to look")
+			}
 		} else {
 			findDoctor(filters, render);
 		}
