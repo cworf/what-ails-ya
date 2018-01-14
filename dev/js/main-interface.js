@@ -44,9 +44,13 @@ function renderForm(results){
 }
 
 //function renders final results
-function render(results){
+function render(results, address){
+	if (address) {
+		$('#results-meta').text(`Found ${results.meta.total} wizards within ${address.distance} miles from ${address.address}`)
+	} else {
+		$('#results-meta').text(`Found ${results.meta.total} wizards`);
+	}
 	if (results.meta.count != 0) {
-		$('#count').text(results.meta.total);
 		results.data.forEach(function(doctor){
 			$('#results').append(template(doctor))
 		}); //end loop
