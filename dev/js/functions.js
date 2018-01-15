@@ -11,7 +11,6 @@ export function renderForm(specialties){
 
 //function renders final results
 export function render(filter, results, clientAddress){
-	console.log(filter);
 	if (clientAddress) {
 		$('#results-meta').text(`Found ${results.meta.total} wizards within ${clientAddress.distance} miles of ${clientAddress.address}`);
 	} else {

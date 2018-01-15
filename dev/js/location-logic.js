@@ -6,7 +6,6 @@ export function locApi(location, distance, filters, render, findDoctor, renderSe
   .done(function(data){
 	  //extraploate coordinates from json
 	  const geo = data.results[0].geometry.location.lat + "%2C" + data.results[0].geometry.location.lng + "%2C" + distance; //build string
-	  console.log(data);
 	  filters.location = geo; //add this to the filter
 	  const searchFor = {};
 	  searchFor.address = data.results[0].formatted_address;
@@ -15,7 +14,6 @@ export function locApi(location, distance, filters, render, findDoctor, renderSe
 	  findDoctor(filters, render, renderSearches, searchFor);
   })
   .fail(function(error){
-	  console.log(error);
 	  alert(error.responseJSON.error_message);
   });
 }

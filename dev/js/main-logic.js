@@ -7,17 +7,13 @@ export function findDoctor(filters, render, renderSearches, address){ //filters 
 		}
 	}
 	const queryString = filterArr.join('&'); //create query string from filter array separated by '&'
-	console.log(queryString);
 	$.get(`https://api.betterdoctor.com/2016-03-01/doctors?${queryString}&skip=0&limit=10&user_key=${apiKey}`)
 	.done(function(results){
-		console.log(renderSearches);
 		render(filters, results, address);
 		const meta = results.meta
 		renderSearches(filters, address);
-		console.log(filters);
 	})
 	.fail(function(error){
-		console.log(error);
 		alert("If you are searching by practice, you must select any additional filter to narrow your results.");
 	});
 }
