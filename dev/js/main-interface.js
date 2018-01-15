@@ -5,6 +5,7 @@ import { findDoctor } from '../dev/js/main-logic.js';
 
 const favorites = [];
 let currentList = [];
+const searches = [];
 let practiceName = "";
 
 $(function(){

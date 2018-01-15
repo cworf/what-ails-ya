@@ -45,13 +45,13 @@ function renderSearches(filter, address, queryString){
 		Searched for all doctors ${name} ${practice} ${location} ${ailment}.
 		<button class="search-again" query-data="${favorites.length}">Search again</button>
 	</div>`;
-	favorites.push(filter);
+	searches.push(filter);
 	$('#searches').append(result);
 	$('.search').last().children('button').click(function(){
 		currentList = [];
 		$('#results').text("");//clear the board
 		const queryData = $(this).attr('query-data');
-		const newFilter = favorites[queryData];
+		const newFilter = searches[queryData];
 		findDoctor(newFilter, render);
 	});
 
@@ -71,6 +71,7 @@ function removeDr(index){
 function refreshFavs(){
 	$('#favorites').text('');
 	for (var i = 0; i < favorites.length; i++) {
+		console.log(favorites[i]);
 		$('#favorites').append(favorites[i].createTemplate(i, true));
 	}
 	$('.remove-btn').click(function(){
