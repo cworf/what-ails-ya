@@ -2,7 +2,6 @@ div#results {
     display: grid;
     grid-template-columns: repeat(3,1fr);
     grid-gap: 20px;
-    padding: 20px;
 }
 
 .doctor {
@@ -36,4 +35,29 @@ span.sub-meta-title {
 
 .meta div {
     margin-left: 10px;
+}
+
+div#searches {
+    grid-area: 2 / 2;
+}
+
+.container {
+    display: grid;
+    grid-template: auto / 2fr 1fr;
+}
+
+h2:first-of-type {
+    grid-area: 1;
+}
+
+#results {
+    grid-area: 4 / 1;
+}
+
+div#results-meta {
+    grid-area: 3 / 1;
+}
+
+form#filters {
+    grid-area: 2;
 }
