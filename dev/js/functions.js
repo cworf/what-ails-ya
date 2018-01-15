@@ -1,6 +1,6 @@
 
 //function renders grouped select box
-export function renderForm(specialties){
+function renderForm(specialties){
 	specialties.data.forEach(function(option){
 		let value = option.uid;
 		let display = option.name;
@@ -10,7 +10,8 @@ export function renderForm(specialties){
 }
 
 //function renders final results
-export function render(filter, results, clientAddress){
+function render(filter, results, clientAddress){
+	console.log(filter);
 	if (clientAddress) {
 		$('#results-meta').text(`Found ${results.meta.total} wizards within ${clientAddress.distance} miles of ${clientAddress.address}`);
 	} else {
@@ -34,32 +35,40 @@ export function render(filter, results, clientAddress){
 }
 
 //render's last search
-export function renderSearches(filter, address){
+function renderSearches(filter, address, queryString){
+	console.log(filter);
 	let name = filter.name ? `with a name kinda like <strong>${filter.name}</strong>` : ``,
 		practice = filter.specialty_uid ? `who practice <strong>${practiceName}</strong>` : ``,
 		location = filter.location ? `somewhere near <strong>${address.address}</strong>,` : ``,
 		ailment = filter.query ? `so they can fix your <strong>${filter.query}</strong>` : ``;
 	const result = `<div class="search">
 		Searched for all doctors ${name} ${practice} ${location} ${ailment}.
-		<button class="search-again">Search again</button>
+		<button class="search-again" query-data="${favorites.length}">Search again</button>
 	</div>`;
-
+	favorites.push(filter);
 	$('#searches').append(result);
+	$('.search').last().children('button').click(function(){
+		currentList = [];
+		$('#results').text("");//clear the board
+		const queryData = $(this).attr('query-data');
+		const newFilter = favorites[queryData];
+		findDoctor(newFilter, render);
+	});
 
 }
 
 //saves doctor to favorites list
-export function saveDr(index){
+function saveDr(index){
 	favorites.push(currentList[index]);
 	refreshFavs();
 }
 //remove doctor from favorites list
-export function removeDr(index){
+function removeDr(index){
 	favorites.splice(index, 1);
 	refreshFavs();
 }
 //refresh favs list after add or remove
-export function refreshFavs(){
+function refreshFavs(){
 	$('#favorites').text('');
 	for (var i = 0; i < favorites.length; i++) {
 		$('#favorites').append(favorites[i].createTemplate(i, true));

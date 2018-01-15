@@ -42,7 +42,7 @@ gulp.task('jsBrowserify', ['concatInterface'], function() {
 //'$ gulp concatInterface' - gather all interface files from js/,
   //concatenate them and place in tmp/ directory
 gulp.task('concatInterface', function(){
-  return gulp.src(['dev/js/*-interface.js'])
+  return gulp.src(['dev/js/main-interface.js', 'dev/js/functions.js'])
     .pipe(concat('allConcat.js'))
     .pipe(gulp.dest('./tmp'));
 });

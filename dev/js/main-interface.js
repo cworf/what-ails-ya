@@ -1,12 +1,12 @@
-import { refreshFavs, saveDr, renderSearches, render, renderForm } from '../dev/js/functions.js';
 import { initApi } from '../dev/js/init-logic.js';
 import Doctor from '../dev/js/doctor-class.js';
 import { locApi } from '../dev/js/location-logic.js';
 import { findDoctor } from '../dev/js/main-logic.js';
 
-let currentList = [];
 const favorites = [];
+let currentList = [];
 let practiceName = "";
+
 $(function(){
 	initApi(renderForm);
 	$('#filters').submit(function(event){
