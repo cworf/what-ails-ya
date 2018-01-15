@@ -26,6 +26,12 @@ export default class Doctor{
 		if (isFav) {
 			btn = '<button class="remove-btn">Remove</button>';
 		}
+		let website = ``;
+		if (this.website) {
+			let website = `<div class="meta">
+				<span class="meta-title">Website:</span> <a target="_blank" href="${this.website}">Click here</a>
+			</div>`
+		}
 		return `<div class="doctor" id-data="${index}">
 			<div class="picture">
 				<img src="${this.picture}" alt="">
@@ -42,9 +48,6 @@ export default class Doctor{
 				</div>
 				<div class="meta">
 					<span class="meta-title">Phones:</span> ${this.phones}
-				</div>
-				<div class="meta">
-					<span class="meta-title">Website:</span> <a href="${this.website}">${this.website}</a>
 				</div>
 				<div class="meta">
 					<span class="meta-title">${this.currentlyAccepting} accepting patients</span>

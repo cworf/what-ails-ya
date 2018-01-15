@@ -1,6 +1,6 @@
 div#results {
     display: grid;
-    grid-template-columns: repeat(3,1fr);
+    grid-template-columns: repeat(2, 1fr);
     grid-gap: 20px;
 }
 
@@ -44,6 +44,7 @@ div#searches {
 .container {
     display: grid;
     grid-template: auto / 2fr 1fr;
+	grid-gap: 20px;
 }
 
 h2:first-of-type {
@@ -60,4 +61,29 @@ div#results-meta {
 
 form#filters {
     grid-area: 2;
+}
+
+h2.search-title {
+    grid-area: 1 / 2;
+}
+h2.fav-title {
+    grid-area: 3 / 2;
+}
+div#favorites {
+	grid-area: 4 / 2 / 6;
+    display: grid;
+    grid-gap: 20px;
+    grid-template-columns: 1fr;
+    align-content: start;
+}
+
+div#searches {
+    display: grid;
+    grid-gap: 10px;
+}
+
+button.search-again {
+    display: block;
+    margin-top: 4px;
+    margin-left: auto;
 }
