@@ -3,17 +3,18 @@ import Doctor from '../dev/js/doctor-class.js';
 import {locApi} from '../dev/js/location-logic.js';
 import { findDoctor } from '../dev/js/main-logic.js';
 
-const currentList = [];
+let currentList = [];
 const favorites = [];
 
 $(function(){
 	initApi(renderForm);
 	$('#filters').submit(function(event){
 		event.preventDefault();
-		const filters = {};
-		const location = $('#address').val();
-		const distance = $('#distance').val();
+		const filters = {},
+			location = $('#address').val(),
+			distance = $('#distance').val();
 
+		currentList = [];
 		$('#results').text("");//clear the board
 		$('*[name=filter]').each(function(){ //put each filter pair into the filters object if its filled out
 			let key = $(this).attr('id');
