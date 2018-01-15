@@ -1,6 +1,5 @@
 export default class Doctor{
 	constructor(doctor) {
-		this.id;
 		this.name = doctor.profile.first_name + " " + doctor.profile.last_name;
 		this.address = doctor.practices[0] ? doctor.practices[0].visit_address.street : "not available";
 		this.address2 = doctor.practices[0] ? (doctor.practices[0].visit_address.street2 ? `${doctor.practices[0].visit_address.street2} <br>` : "") : "";
@@ -22,8 +21,12 @@ export default class Doctor{
 		return phoneStr;
 	}
 
-	createTemplate() {
-		return `<div class="doctor" listing-data="${this.id}">
+	createTemplate(index, isFav) {
+		let btn = '<button class="favorite-btn">Save</button>';
+		if (isFav) {
+			btn = '<button class="remove-btn">Remove</button>';
+		}
+		return `<div class="doctor" id-data="${index}">
 			<div class="picture">
 				<img src="${this.picture}" alt="">
 			</div>
@@ -47,6 +50,7 @@ export default class Doctor{
 					<span class="meta-title">${this.currentlyAccepting} accepting patients</span>
 				</div>
 			</div>
+			${btn}
 		</div>`;
 	}
 }

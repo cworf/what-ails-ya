@@ -1,6 +1,6 @@
 import { initApi } from '../dev/js/init-logic.js';
 import Doctor from '../dev/js/doctor-class.js';
-import {locApi} from '../dev/js/location-logic.js';
+import { locApi } from '../dev/js/location-logic.js';
 import { findDoctor } from '../dev/js/main-logic.js';
 
 let currentList = [];
@@ -36,7 +36,7 @@ $(function(){
 			findDoctor(filters, render);
 		}
 	}); //end submit
-});
+});//end document ready
 
 //function renders grouped select box
 function renderForm(specialties){
@@ -61,13 +61,35 @@ function render(results, clientAddress){
 		}); //end loop
 
 		for (var i = 0; i < currentList.length; i++) {
-			currentList[i].id = i;
-			$('#results').append(currentList[i].createTemplate());
+			$('#results').append(currentList[i].createTemplate(i));
 		}
-		currentList.forEach(function(listing){
-
+		$('.favorite-btn').click(function(){
+			const i = $(this).parent().attr('id-data');
+			saveDr(i);
 		});
 	} else {
 		alert("hmm, you gotta use better search terms. This search came up empty...");
 	}
+}
+
+//saves doctor to favorites list
+function saveDr(index){
+	favorites.push(currentList[index])
+	refreshFavs();
+}
+
+function removeDr(index){
+	favorites.splice(index, 1);
+	refreshFavs()
+}
+
+function refreshFavs(){
+	$('#favorites').text('');
+	for (var i = 0; i < favorites.length; i++) {
+		$('#favorites').append(favorites[i].createTemplate(i, true))
+	}
+	$('.remove-btn').click(function(){
+		const whichOne = $(this).parent().attr('id-data');
+		removeDr(whichOne);
+	});
 }
