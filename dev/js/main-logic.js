@@ -14,6 +14,6 @@ export function findDoctor(filters, render, address){ //filters is an object of 
 	})
 	.fail(function(error){
 		console.log(error);
-		alert(error.responseJSON.meta.message)
+		alert("If you are searching by practice, you must select any additional filter to narrow your results.")
 	});
 }

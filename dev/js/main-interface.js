@@ -23,13 +23,13 @@ $(function(){
 			}
 		}); //end loop
 
-		if ($.isEmptyObject(filters) && !address) {
+		if ($.isEmptyObject(filters) && !location) {
 			alert("ya ain't can't search for nothin'!");
 		} else if (location) {
 			if (distance) {
 				locApi(location, distance, filters, render, findDoctor);
 			} else {
-				alert("I need to know where how far out to look");
+				alert("I need to know how far out to look");
 			}
 		} else {
 			findDoctor(filters, render);
@@ -50,7 +50,7 @@ function renderForm(specialties){
 //function renders final results
 function render(results, clientAddress){
 	if (clientAddress) {
-		$('#results-meta').text(`Found ${results.meta.total} wizards within ${clientAddress.distance} miles of ${clientAddress.clientAddress}`);
+		$('#results-meta').text(`Found ${results.meta.total} wizards within ${clientAddress.distance} miles of ${clientAddress.address}`);
 	} else {
 		$('#results-meta').text(`Found ${results.meta.total} wizards`);
 	}
